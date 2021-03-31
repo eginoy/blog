@@ -12,7 +12,7 @@ gatsbyで作成したwebsiteディレクトリに移動し、script格納ディ�
 リポジトリ全体は必要無いのでsvnコマンドでscriptを落としてくる  
 `$ svn export https://github.com/eginoy/gatsby-new-post-generator/trunk/lib/`  
 ~~（TODO: せっかくなのでnpmパッケージとして使えるようにする。）~~  
-[npmパッケージにした。](https://eginoy.github.io/初めてnpmパッケージを作って公開した/)
+[npmパッケージにした。](https://eginoy.github.io/%E5%88%9D%E3%82%81%E3%81%A6npm%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%81%9F/)
 
 package.jsonのscriptsにnewpostコマンドを追加する  
 `"scripts": { "newpost": "node ./script/lib/newpost.js", "build": "gatsby build", ...`
