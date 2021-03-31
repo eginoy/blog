@@ -3,24 +3,25 @@ title: 新規記事を作成するスクリプトを書いた
 date: "2021-03-22"
 ---
 ## つくったもの
-https://github.com/eginoy/gatsby_new_post_script
+https://github.com/eginoy/gatsby-new-post-generator
 
 ## インストール
 gatsbyで作成したwebsiteディレクトリに移動し、script格納ディレクトリを作成して移動  
-`cd ${your_gatsby_website_dir} && mkdir script && cd script`  
+`$ cd ${your_gatsby_website_dir} && mkdir script && cd script`  
 
 リポジトリ全体は必要無いのでsvnコマンドでscriptを落としてくる  
-`svn export https://github.com/eginoy/gatsby_new_post_script/trunk/newpost`  
-（TODO: せっかくなのでnpmパッケージとして使えるようにする。）  
+`$ svn export https://github.com/eginoy/gatsby-new-post-generator/trunk/lib/`  
+~~（TODO: せっかくなのでnpmパッケージとして使えるようにする。）~~  
+[npmパッケージにした。](https://eginoy.github.io/初めてnpmパッケージを作って公開した/)
 
 package.jsonのscriptsにnewpostコマンドを追加する  
-`"scripts": { "newpost": "node ./script/newpost/index.js", "build": "gatsby build", ...`
+`"scripts": { "newpost": "node ./script/lib/newpost.js", "build": "gatsby build", ...`
 
 ## 使い方
 hello_worldというタイトルの記事を作成する。  
 （Markdownのメタデータへ指定したタイトル,本日日付をセットした雛形を生成）  
 
-`yarn newpost hello_world`
+`$ yarn newpost hello_world`
 
 ## なぜつくったか
  - 以前少し触ったGo製の静的サイトジェネレーター(hugo)には新しいページを作成するコマンドがあったがGatsbyにはなかったので。  

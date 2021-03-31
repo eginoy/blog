@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "gatsby": "^3.0.1",
+    "gatsby-new-post-generator": "^1.0.0",
     "gatsby-plugin-feed": "^3.0.0",
     "gatsby-plugin-gatsby-cloud": "^2.0.0",
     "gatsby-plugin-google-analytics": "^3.0.0",
@@ -26,6 +27,7 @@
     "gatsby-transformer-remark": "^3.0.0",
     "gatsby-transformer-sharp": "^3.0.0",
     "gh-pages": "^3.1.0",
+    "micromark-extension-mdx": "^0.2.1",
     "prismjs": "^1.23.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -47,7 +49,6 @@
     "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
   },
   "scripts": {
-    "newpost": "node ./script/newpost/index.js",
     "build": "gatsby build",
     "develop": "gatsby develop",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
