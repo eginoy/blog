@@ -95,7 +95,9 @@ content/blog/
 `$ npm login`でログインする
 
 ### 公開する
-公開したいパッケージのディレクトリ移動する
+公開したいパッケージのディレクトリへ移動する  
+`$ cd ${npm_package_dir}`  
+npmリポジトリへ公開  
 `$ npm publish`
 
 ## 学べたこと
