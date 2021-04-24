@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 21 Apr 2021 14:09:45 GMT</lastBuildDate><item><title><![CDATA[大学生になった]]></title><description><![CDATA[…]]></description><link>https://eginoy.github.io/blog/大学生になった/</link><guid isPermaLink="false">https://eginoy.github.io/blog/大学生になった/</guid><pubDate>Wed, 21 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;今年度から東京通信大学の情報マネジメント学部に入学した。  &lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 24 Apr 2021 09:33:43 GMT</lastBuildDate><item><title><![CDATA[Pi-holeで広告ブロック]]></title><description><![CDATA[アプリ内ブラウザでの広告が目障り PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。 Pi-holeというOSSでDNSサーバーを自前で立てて、スマートフォン側でDNS…]]></description><link>https://eginoy.github.io/blog/piholeで広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/piholeで広告ブロック/</guid><pubDate>Sat, 24 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;アプリ内ブラウザでの広告が目障り&lt;/h3&gt;
+&lt;p&gt;PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。&lt;br&gt;
+しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。&lt;br&gt;
+&lt;a href=&quot;https://github.com/pi-hole/docker-pi-hole&quot;&gt;Pi-holeというOSS&lt;/a&gt;でDNSサーバーを自前で立てて、スマートフォン側でDNSサーバーにPi-holeを指定することで、広告除去ができるようなので設定を行った。&lt;br&gt;
+すでに録画サーバーをRaspiberry pi4で運用しているので、こちらにPi-holeをインストールすることにした。&lt;br&gt;
+運用中の環境を汚したくないため、公式のdocker-composeファイルを利用してDNSサーバーを立てる。&lt;/p&gt;
+&lt;h3&gt;環境&lt;/h3&gt;
+&lt;p&gt;DNSサーバー&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Raspberry Pi4 4GB&lt;/li&gt;
+&lt;li&gt;Ubuntu 20.04.1 LTS&lt;/li&gt;
+&lt;li&gt;Docker version 19.03.8&lt;/li&gt;
+&lt;li&gt;docker-compose version 1.27.4&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Pi-holeのセットアップ&lt;/h3&gt;
+&lt;p&gt;基本的には&lt;a href=&quot;https://github.com/pi-hole/docker-pi-hole&quot;&gt;公式のドキュメント&lt;/a&gt;からdocker-composeファイルをコピペして動かすだけ。  &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;3&quot;&lt;/span&gt;
+
+&lt;span class=&quot;token comment&quot;&gt;# More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;pihole&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; pihole
+    &lt;span class=&quot;token key atrule&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; pihole/pihole&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;latest
+    &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;53:53/tcp&quot;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;53:53/udp&quot;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;67:67/udp&quot;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;80:80/tcp&quot;&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;TZ&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;America/Chicago&apos;&lt;/span&gt;
+      &lt;span class=&quot;token comment&quot;&gt;# WEBPASSWORD: &apos;set a secure password here or it will be random&apos;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Volumes store your data between container upgrades&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;./etc-pihole/:/etc/pihole/&apos;&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;./etc-DNSmasq.d/:/etc/DNSmasq.d/&apos;&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;# Recommended but not required (DHCP needs NET_ADMIN)&lt;/span&gt;
+    &lt;span class=&quot;token comment&quot;&gt;#   https://github.com/pi-hole/docker-pi-hole#note-on-capabilities&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;cap_add&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; NET_ADMIN
+    &lt;span class=&quot;token key atrule&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; unless&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;stopped&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;しかし、Ubuntu 17.10以降で利用する場合、システムにデフォルトで有効になっているDNS resolverがPi-holeで使用する53ポートを既に使用しているため、コンテナを立ち上げる際にエラーが発生する。&lt;br&gt;
+以下のコマンドでPi-holeが53ポートを使用できるようにする。&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;sudo sed -r -i.orig &amp;#39;s/#?DNSStubListener=yes/DNSStubListener=no/g&amp;#39; /etc/systemd/resolved.conf&lt;/code&gt;&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;sudo sh -c &amp;#39;rm /etc/resolv.conf &amp;amp;&amp;amp; ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf&lt;/code&gt;&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;systemctl restart systemd-resolved&lt;/code&gt;  &lt;/p&gt;
+&lt;p&gt;コンテナの起動&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;docker-compose up -d&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;クライアントからDNSサーバーを指定する際に、ipアドレスが必要なので確認しておく。&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;hostname -I&lt;/code&gt;  &lt;/p&gt;
+&lt;h3&gt;クライアントの設定&lt;/h3&gt;
+&lt;p&gt;スマートフォン(iPhone SE2)の設定は以下の手順で行った。&lt;br&gt;
+DNSサーバーのアドレスは&lt;code class=&quot;language-text&quot;&gt;192.168.0.10&lt;/code&gt;とする。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;設定&lt;/li&gt;
+&lt;li&gt;Wi-Fi&lt;/li&gt;
+&lt;li&gt;接続しているアクセスポイントのiマークをタップ&lt;/li&gt;
+&lt;li&gt;画面下部のDNSを構成&lt;/li&gt;
+&lt;li&gt;手動にチェックを入れる&lt;/li&gt;
+&lt;li&gt;すでに設定されているDNSサーバーをすべて削除&lt;/li&gt;
+&lt;li&gt;&lt;code class=&quot;language-text&quot;&gt;192.168.0.10&lt;/code&gt;を入力して保存&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;設定前&lt;br&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/6cf486f6a81c52bd627dce555f78a729/acb04/before.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 177.8481012658228%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAkABQDASIAAhEBAxEB/8QAGgABAAIDAQAAAAAAAAAAAAAAAAIDAQQFBv/EABcBAAMBAAAAAAAAAAAAAAAAAAABAgP/2gAMAwEAAhADEAAAAZy6GLnluwCqvYxncUjPNgVAc//EAB0QAAICAwADAAAAAAAAAAAAAAACAQMREhMEFCL/2gAIAQEAAQUCXxq2PUU4VGxsQ2Rpga3C12bxsrGVOlSi32Ks2vlvuf/EABURAQEAAAAAAAAAAAAAAAAAABAR/9oACAEDAQE/AWv/xAAXEQADAQAAAAAAAAAAAAAAAAAAESAh/9oACAECAQE/AUZP/8QAHxAAAgICAQUAAAAAAAAAAAAAAAECESEyMxIxQYGR/9oACAEBAAY/AsTb9GzOWXw0ONmjHZaLRayeDMoo6VLB3Llln//EACAQAQACAgEEAwAAAAAAAAAAAAEAESExURBBgaGR0fH/2gAIAQEAAT8hsPPwjn0nRzV29S/4fcqZD4ljFuY6Kus1LHSNahpJ5AZ22ngmovwoQesJQVFWbY4jewFT/9oADAMBAAIAAwAAABAM4LGL3//EABoRAAICAwAAAAAAAAAAAAAAAAABEBEhMVH/2gAIAQMBAT8QsyMpw20nH//EABsRAAICAwEAAAAAAAAAAAAAAAABEaEQQVHR/9oACAECAQE/EGulZHNrzCIRB//EAB8QAQACAQQDAQAAAAAAAAAAAAEAESExQVGRYXGh8f/aAAgBAQABPxCgAFWhjshYgrBJNpJMVs+S9C8dP1M28a4g9uU4y+yzIohvi4oMoJoo5ZhwtC0ut/UuRvZId7xBp5hhQNaMk81ME5RNHUNGabscQ2+BbTB6n//Z&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;設定前&quot;
+        title=&quot;設定前&quot;
+        src=&quot;/static/6cf486f6a81c52bd627dce555f78a729/828fb/before.jpg&quot;
+        srcset=&quot;/static/6cf486f6a81c52bd627dce555f78a729/ff44c/before.jpg 158w,
+/static/6cf486f6a81c52bd627dce555f78a729/a6688/before.jpg 315w,
+/static/6cf486f6a81c52bd627dce555f78a729/828fb/before.jpg 630w,
+/static/6cf486f6a81c52bd627dce555f78a729/acb04/before.jpg 750w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;p&gt;設定後
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/ce47549d903a404be0e80537e8f5eb06/acb04/after.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 177.8481012658228%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAkABQDASIAAhEBAxEB/8QAGQABAAMBAQAAAAAAAAAAAAAAAAECBQMG/8QAFwEBAQEBAAAAAAAAAAAAAAAAAQACA//aAAwDAQACEAMQAAABvbQjectsKtekc99EE8vIgR//xAAdEAABBAMBAQAAAAAAAAAAAAAAAQIDEhARFAQT/9oACAEBAAEFAm+aNxyNPhEWLCO2URSqY3jZ0SnRKdMx/8QAFhEAAwAAAAAAAAAAAAAAAAAAEBEg/9oACAEDAQE/AYY//8QAFxEAAwEAAAAAAAAAAAAAAAAAABEgIf/aAAgBAgEBPwFGT//EAB0QAAIBBAMAAAAAAAAAAAAAAAAyAQIgITMxgZH/2gAIAQEABj8CxXM9DSbavBDXIkmTi1xxz//EACEQAAICAAUFAAAAAAAAAAAAAAERACEQMUGRoWFxgdHx/9oACAEBAAE/IWHn4Ib4Rg4qc3Ef4e4pYNpbINzooIQdOXq94iswvbPsIsixrWIGfYT/2gAMAwEAAgADAAAAEAztw3Pf/8QAGREAAwEBAQAAAAAAAAAAAAAAAAERIRBR/9oACAEDAQE/EKbxp+FVaVn/xAAcEQABAwUAAAAAAAAAAAAAAAABEBGhACFBUdH/2gAIAQIBAT8QI4E02sjitZP/xAAhEAEAAgEDBAMAAAAAAAAAAAABABEhMUFRYYGRocHw8f/aAAgBAQABPxCgAFWhjyQsQVgkm0kmK2epeheOn6nYtcQe3KcZe5hOtRbibgDyFMrVGg0JvHPKmFMV3hbh4bQMAD1KibuuA+IsE1GgUwIAftxP/9k=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;設定後&quot;
+        title=&quot;設定後&quot;
+        src=&quot;/static/ce47549d903a404be0e80537e8f5eb06/828fb/after.jpg&quot;
+        srcset=&quot;/static/ce47549d903a404be0e80537e8f5eb06/ff44c/after.jpg 158w,
+/static/ce47549d903a404be0e80537e8f5eb06/a6688/after.jpg 315w,
+/static/ce47549d903a404be0e80537e8f5eb06/828fb/after.jpg 630w,
+/static/ce47549d903a404be0e80537e8f5eb06/acb04/after.jpg 750w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;  &lt;/p&gt;
+&lt;h3&gt;所感&lt;/h3&gt;
+&lt;p&gt;これで自宅Wi-Fiに接続していれば、スマートフォンのアプリ内ブラウザでも広告除去ができるようになった。&lt;br&gt;
+しかし、外出先で閲覧した際には広告除去ができない。&lt;br&gt;
+tailescaleなどを利用して外出先から自宅ネットワークに接続し、広告除去できるようにしたい。  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[大学生になった]]></title><description><![CDATA[…]]></description><link>https://eginoy.github.io/blog/大学生になった/</link><guid isPermaLink="false">https://eginoy.github.io/blog/大学生になった/</guid><pubDate>Wed, 21 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;今年度から東京通信大学の情報マネジメント学部に入学した。  &lt;/p&gt;
 &lt;h3&gt;なぜ大学に入ったのか&lt;/h3&gt;
 &lt;p&gt;最終学歴が高卒なので、学歴コンプレックスを解消しておきたかった。&lt;br&gt;
 理由としてはこれがすべてで、とくに高尚な理由はない。  &lt;/p&gt;
