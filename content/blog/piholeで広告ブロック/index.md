@@ -45,7 +45,7 @@ services:
       - NET_ADMIN
     restart: unless-stopped
 ```
-しかし、Ubuntu 17.10以降で利用する場合、システムにデフォルトで有効になっているDNS resolverがPi-holeで使用する53ポートを既に使用しているため、コンテナを立ち上げる際にエラーが発生する。  
+しかし、Ubuntu 17.10以降で利用する場合、デフォルトで有効になっているDNS resolverがPi-holeで使用する53ポートを既に使用しているため、コンテナを立ち上げる際にエラーが発生する。  
 以下のコマンドでPi-holeが53ポートを使用できるようにする。  
 `sudo sed -r -i.orig 's/#?DNSStubListener=yes/DNSStubListener=no/g' /etc/systemd/resolved.conf`  
 `sudo sh -c 'rm /etc/resolv.conf && ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf`  
@@ -78,4 +78,4 @@ DNSサーバーのアドレスは`192.168.0.10`とする。
 ### 所感
 これで自宅Wi-Fiに接続していれば、スマートフォンのアプリ内ブラウザでも広告除去ができるようになった。  
 しかし、外出先で閲覧した際には広告除去ができない。  
-tailescaleなどを利用して外出先から自宅ネットワークに接続し、広告除去できるようにしたい。  
+[tailscale](https://tailscale.com/)などを利用して外出先から自宅ネットワークに接続し、広告除去できるようにしたい。  
