@@ -1,4 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 28 Apr 2021 06:04:53 GMT</lastBuildDate><item><title><![CDATA[Pi-holeで広告ブロック]]></title><description><![CDATA[アプリ内ブラウザでの広告が目障り PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。 Pi-holeというOSSでDNSサーバーを自前で立てて、スマートフォン側でDNS…]]></description><link>https://eginoy.github.io/blog/piholeで広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/piholeで広告ブロック/</guid><pubDate>Sat, 24 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;アプリ内ブラウザでの広告が目障り&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 28 Apr 2021 08:01:59 GMT</lastBuildDate><item><title><![CDATA[tailscaleを利用して外出先でも広告ブロック]]></title><description><![CDATA[外出先でも広告ブロックがしたい 前回の記事では、Pi-holeを利用して広告ブロックDNSサーバーを立てた。 自宅Wi-Fiネットワーク接続時、DNSサーバーをPi-hole…]]></description><link>https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</guid><pubDate>Wed, 28 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;外出先でも広告ブロックがしたい&lt;/h3&gt;
+&lt;p&gt;前回の&lt;a href=&quot;http://eginoy.com/pihole%E3%81%A7%E5%BA%83%E5%91%8A%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF/&quot;&gt;記事&lt;/a&gt;では、Pi-holeを利用して広告ブロックDNSサーバーを立てた。&lt;br&gt;
+自宅Wi-Fiネットワーク接続時、DNSサーバーをPi-holeに指定することで広告除去ができるようになった。&lt;br&gt;
+しかし、外出先ではモバイネットワークを利用するため、上記の方法で広告ブロックができない。&lt;br&gt;
+外出先からでも広告ブロックが実現できるように、クラウド型VPNサービスの&lt;a href=&quot;https://tailscale.com/&quot;&gt;tailscale&lt;/a&gt;を利用する。&lt;/p&gt;
+&lt;h3&gt;tailscaleのインストールと設定&lt;/h3&gt;
+&lt;h4&gt;サインアップ&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://tailscale.com/&quot;&gt;tailscale&lt;/a&gt;にサインアップしておく。&lt;br&gt;
+(Google、Microsoftアカウントでのサインアップができるので便利。)&lt;/p&gt;
+&lt;h4&gt;インストール&lt;/h4&gt;
+&lt;p&gt;&lt;a href=&quot;https://tailscale.com/download/linux&quot;&gt;公式のセットアップ手順&lt;/a&gt;通りに、Pi-holeを構築しているLinuxマシン上で作業を行う。  &lt;/p&gt;
+&lt;p&gt;環境&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Raspberry Pi4 4GB&lt;/li&gt;
+&lt;li&gt;Ubuntu 20.04.1 LTS&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;repositoryを登録  &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.gpg | sudo apt-key add -&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;tailscaleのインストール  &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;sudo apt-get update&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;sudo apt-get install tailscale&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;tailscaleにログイン&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;sudo tailscale up&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;表示されたリンクにアクセスしてログインする。&lt;/p&gt;
+&lt;p&gt;tailscaleから割り当てられたIPアドレスの確認&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;sh&quot;&gt;&lt;pre class=&quot;language-sh&quot;&gt;&lt;code class=&quot;language-sh&quot;&gt;ip addr show tailscale0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;クライアントにもアプリをインストールして、ログインしておく。&lt;/p&gt;
+&lt;h3&gt;tailscaleのNameServersにPi-holeのアドレス指定&lt;/h3&gt;
+&lt;p&gt;tailscaleのDNS設定画面で、NameServersにPi-holeのアドレスを指定する。&lt;br&gt;
+（100から始まるtailscale上のアドレスなので注意）&lt;br&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/b85835161bd08cd758da659af07a041f/7fee5/tailscale-dns.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 87.9746835443038%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAASCAYAAABb0P4QAAAACXBIWXMAABBNAAAQTQFnjAHgAAACXklEQVQ4y51UyY7UMBDNZ/ItiAsXjlwZiQsXrnwLQw+otyFJZ+kli7M7djp+VLkXekY9rQFLT1V+SmovO3EYIPQ9bOIIpcixXcdgTmQZku2G+BBFnlmev1lHIbbhCun9L/g/XaSTGTLPxWazRlOVcNqmhuxaVGWBrm1QE1kWAsyzznxb15ZjvSTU5KBYeAg3JQo/RhPHKOsKPdlxfIpuPl/AGPzbKUoYUcBkOTAMZ9qJwhC+758NsjBmJJjbuLB9+Ic5A0dKia7rIMhj36Qwun5VgNccsHR+L+d4mHzH4+MSG+8eaTSlbCrkeU71KiGEQFFQ3biO1YHnIE5Gnx9nnUq4UQ0/rvEY1PDiBm0n0fc9lFJWnnV7l1Sy4WWDd98CvLtb4MMXF+8/L/Hxq4u2H1+V8rXjiKLCLhFICLukQJJLVLVCJweY8eWm4BrHBvV+gN5rqIHS0YTBoFUGejx27wauRe2YlOYo53kSVlK7/4Lv+QWfF090/seCbBj+jiP0Jw9YTKdwZzPEno89dXCgphxkZ6VuO6imIdmSbI96B2gNoxgKZpvYqJ1wsYS7WmEVhAjCGD7p/spHEEV0D+2dpaDV47ERNEIZjU5VN+ehtjI7RqhooNV+j15W0KqyY9H1GpJHhSJoKUp9sVp4viEn0AraGoKXvVJQy0/AjzfA7C0gM9pP6gqlQtZIUlrkwPTqKdQRrG93h5RlvEa1ClB7CzTuBCqcYkwTjJTCeCo6I78Bjo4fCjbY0JOTZCl2aYZUlHZc/vtwyvy+8b4KKnRGnjIhLQoqg9b7qwN86wX6A1XgbxcrmGL9AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;tailscale-dns&quot;
+        title=&quot;tailscale-dns&quot;
+        src=&quot;/static/b85835161bd08cd758da659af07a041f/f058b/tailscale-dns.png&quot;
+        srcset=&quot;/static/b85835161bd08cd758da659af07a041f/c26ae/tailscale-dns.png 158w,
+/static/b85835161bd08cd758da659af07a041f/6bdcf/tailscale-dns.png 315w,
+/static/b85835161bd08cd758da659af07a041f/f058b/tailscale-dns.png 630w,
+/static/b85835161bd08cd758da659af07a041f/7fee5/tailscale-dns.png 781w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;br&gt;
+tailscaleに接続しているクライアント（モバイネットワークなどから）で広告ブロックできていることが確認できれば成功。&lt;/p&gt;
+&lt;h3&gt;所感&lt;/h3&gt;
+&lt;p&gt;広告はWebサイト、スマートフォンアプリ運営費の収益源だったりするので必要なのは理解している。&lt;br&gt;
+しかし、表示される広告は不愉快なもの（鼻の角栓画像、胸糞漫画、コンプレックスを煽るものなど）が多いので基本的にブロックするようになった。&lt;br&gt;
+今回の作業で、外出先でも快適にスマートフォンを利用できるようになったので良かった。（まあ、全然外出しないが）&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Pi-holeで広告ブロック]]></title><description><![CDATA[アプリ内ブラウザでの広告が目障り PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。 Pi-holeというOSSでDNSサーバーを自前で立てて、スマートフォン側でDNS…]]></description><link>https://eginoy.github.io/blog/piholeで広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/piholeで広告ブロック/</guid><pubDate>Sat, 24 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;アプリ内ブラウザでの広告が目障り&lt;/h3&gt;
 &lt;p&gt;PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。&lt;br&gt;
 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。&lt;br&gt;
 &lt;a href=&quot;https://github.com/pi-hole/docker-pi-hole&quot;&gt;Pi-holeというOSS&lt;/a&gt;でDNSサーバーを自前で立てて、スマートフォン側でDNSサーバーにPi-holeを指定することで、広告除去ができるようなので設定を行った。&lt;br&gt;
