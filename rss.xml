@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 24 Apr 2021 09:33:43 GMT</lastBuildDate><item><title><![CDATA[Pi-holeで広告ブロック]]></title><description><![CDATA[アプリ内ブラウザでの広告が目障り PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。 Pi-holeというOSSでDNSサーバーを自前で立てて、スマートフォン側でDNS…]]></description><link>https://eginoy.github.io/blog/piholeで広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/piholeで広告ブロック/</guid><pubDate>Sat, 24 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;アプリ内ブラウザでの広告が目障り&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 28 Apr 2021 06:04:53 GMT</lastBuildDate><item><title><![CDATA[Pi-holeで広告ブロック]]></title><description><![CDATA[アプリ内ブラウザでの広告が目障り PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。 Pi-holeというOSSでDNSサーバーを自前で立てて、スマートフォン側でDNS…]]></description><link>https://eginoy.github.io/blog/piholeで広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/piholeで広告ブロック/</guid><pubDate>Sat, 24 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;アプリ内ブラウザでの広告が目障り&lt;/h3&gt;
 &lt;p&gt;PCではブラウザ拡張のAdBlockなどを使用しているので広告除去ができている。&lt;br&gt;
 しかし、スマートフォンのアプリ内ブラウザでは上記の方法で広告除去ができない。&lt;br&gt;
 &lt;a href=&quot;https://github.com/pi-hole/docker-pi-hole&quot;&gt;Pi-holeというOSS&lt;/a&gt;でDNSサーバーを自前で立てて、スマートフォン側でDNSサーバーにPi-holeを指定することで、広告除去ができるようなので設定を行った。&lt;br&gt;
@@ -38,7 +38,7 @@
     &lt;span class=&quot;token key atrule&quot;&gt;cap_add&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; NET_ADMIN
     &lt;span class=&quot;token key atrule&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; unless&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;stopped&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;しかし、Ubuntu 17.10以降で利用する場合、システムにデフォルトで有効になっているDNS resolverがPi-holeで使用する53ポートを既に使用しているため、コンテナを立ち上げる際にエラーが発生する。&lt;br&gt;
+&lt;p&gt;しかし、Ubuntu 17.10以降で利用する場合、デフォルトで有効になっているDNS resolverがPi-holeで使用する53ポートを既に使用しているため、コンテナを立ち上げる際にエラーが発生する。&lt;br&gt;
 以下のコマンドでPi-holeが53ポートを使用できるようにする。&lt;br&gt;
 &lt;code class=&quot;language-text&quot;&gt;sudo sed -r -i.orig &amp;#39;s/#?DNSStubListener=yes/DNSStubListener=no/g&amp;#39; /etc/systemd/resolved.conf&lt;/code&gt;&lt;br&gt;
 &lt;code class=&quot;language-text&quot;&gt;sudo sh -c &amp;#39;rm /etc/resolv.conf &amp;amp;&amp;amp; ln -s /run/systemd/resolve/resolv.conf /etc/resolv.conf&lt;/code&gt;&lt;br&gt;
@@ -124,7 +124,7 @@ DNSサーバーのアドレスは&lt;code class=&quot;language-text&quot;&gt;192
 &lt;h3&gt;所感&lt;/h3&gt;
 &lt;p&gt;これで自宅Wi-Fiに接続していれば、スマートフォンのアプリ内ブラウザでも広告除去ができるようになった。&lt;br&gt;
 しかし、外出先で閲覧した際には広告除去ができない。&lt;br&gt;
-tailescaleなどを利用して外出先から自宅ネットワークに接続し、広告除去できるようにしたい。  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[大学生になった]]></title><description><![CDATA[…]]></description><link>https://eginoy.github.io/blog/大学生になった/</link><guid isPermaLink="false">https://eginoy.github.io/blog/大学生になった/</guid><pubDate>Wed, 21 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;今年度から東京通信大学の情報マネジメント学部に入学した。  &lt;/p&gt;
+&lt;a href=&quot;https://tailscale.com/&quot;&gt;tailscale&lt;/a&gt;などを利用して外出先から自宅ネットワークに接続し、広告除去できるようにしたい。  &lt;/p&gt;</content:encoded></item><item><title><![CDATA[大学生になった]]></title><description><![CDATA[…]]></description><link>https://eginoy.github.io/blog/大学生になった/</link><guid isPermaLink="false">https://eginoy.github.io/blog/大学生になった/</guid><pubDate>Wed, 21 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;今年度から東京通信大学の情報マネジメント学部に入学した。  &lt;/p&gt;
 &lt;h3&gt;なぜ大学に入ったのか&lt;/h3&gt;
 &lt;p&gt;最終学歴が高卒なので、学歴コンプレックスを解消しておきたかった。&lt;br&gt;
 理由としてはこれがすべてで、とくに高尚な理由はない。  &lt;/p&gt;
