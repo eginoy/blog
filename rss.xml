@@ -1,4 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 28 Apr 2021 08:01:59 GMT</lastBuildDate><item><title><![CDATA[tailscaleを利用して外出先でも広告ブロック]]></title><description><![CDATA[外出先でも広告ブロックがしたい 前回の記事では、Pi-holeを利用して広告ブロックDNSサーバーを立てた。 自宅Wi-Fiネットワーク接続時、DNSサーバーをPi-hole…]]></description><link>https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</guid><pubDate>Wed, 28 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;外出先でも広告ブロックがしたい&lt;/h3&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 02 May 2021 10:07:51 GMT</lastBuildDate><item><title><![CDATA[radcastをDockerで動くようにした]]></title><description><![CDATA[作ったもの https://github.com/eginoy/radcast-docker 動機 radikoのタイムフリーは再生開始から2…]]></description><link>https://eginoy.github.io/blog/radcastをDockerで動くようにした/</link><guid isPermaLink="false">https://eginoy.github.io/blog/radcastをDockerで動くようにした/</guid><pubDate>Sun, 02 May 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;作ったもの&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/eginoy/radcast-docker&quot;&gt;https://github.com/eginoy/radcast-docker&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;動機&lt;/h3&gt;
+&lt;p&gt;radikoのタイムフリーは再生開始から24時間という、聴取期限が切られている。&lt;br&gt;
+自分は家事を始めるタイミングでタイムフリーを聴くことが多い。&lt;br&gt;
+聴くものは深夜ラジオがほとんどなので（長さが1、2時間）、ラジオを聴き終える前に家事が先に終了してしまう。&lt;br&gt;
+次に家事を始めるタイミングであらためて続きを聴き始める、といったことをしたいのだが、冒頭に書いた聴取期限があるので日をまたいで聴くことができない。&lt;br&gt;
+そこで、&lt;a href=&quot;https://github.com/omiso46/radcast&quot;&gt;radcast&lt;/a&gt;というradikoを録音するOSSを見つけたのでこちらを利用することにした。  &lt;/p&gt;
+&lt;h4&gt;なぜDockerを利用したか&lt;/h4&gt;
+&lt;p&gt;以前から興味があり、はてブのホッテントリに上がってくるDocker,Docker Composeの入門記事をハンズオン形式で進めていた。&lt;br&gt;
+しかし、業務でDockerを扱う機会がないので、チュートリアルを終えた後にすることがなく困っていた。&lt;br&gt;
+今回の環境構築は良い機会だと考え、Docker上でradcastを動かすことにした。&lt;/p&gt;
+&lt;h3&gt;Dockerファイルを書いてみて学べた、つまずいた箇所&lt;/h3&gt;
+&lt;h4&gt;alpineイメージでタイムゾーンがJSTにならない&lt;/h4&gt;
+&lt;p&gt;radcastはcronで録音スケジュール管理をしているので、コンテナ内のタイムゾーンをJSTにしておきたかった。&lt;br&gt;
+Dockerファイル、Docker Composeファイルでタイムゾーン環境変数を指定するだけではJSTにならなかった。（&lt;code class=&quot;language-text&quot;&gt;date&lt;/code&gt;コマンドで確認）&lt;br&gt;
+こちらは既知の問題だったため、すぐに解決できた。※&lt;a href=&quot;https://www.collelog.jp/technical-howto/alpine-linux-timezone-setting&quot;&gt;参考&lt;/a&gt;  &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;dockerfile&quot;&gt;&lt;pre class=&quot;language-dockerfile&quot;&gt;&lt;code class=&quot;language-dockerfile&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;FROM&lt;/span&gt; golang&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;alpine
+&lt;span class=&quot;token keyword&quot;&gt;RUN&lt;/span&gt; mkdir /home/radcast
+&lt;span class=&quot;token keyword&quot;&gt;WORKDIR&lt;/span&gt; /home/radcast
+
+&lt;span class=&quot;token keyword&quot;&gt;RUN&lt;/span&gt; apk update  &amp;amp;&amp;amp; apk add ffmpeg git tzdata &amp;amp;&amp;amp;\
+cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime &amp;amp;&amp;amp; apk del tzdata &amp;amp;&amp;amp; \
+go get github.com/omiso46/radcast &amp;amp;&amp;amp; \
+mkdir recorded  
+
+&lt;span class=&quot;token keyword&quot;&gt;CMD&lt;/span&gt; chmod +x config&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;create.sh &amp;amp;&amp;amp; ./config&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;create.sh &amp;amp;&amp;amp; \
+radcast &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;config ./config.json &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;host 0.0.0.0 &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;output ./recorded &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;port 3355
+&lt;span class=&quot;token keyword&quot;&gt;EXPOSE&lt;/span&gt; 3355&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;alpineのデフォルトシェルはash&lt;/h4&gt;
+&lt;p&gt;radcastの録音スケジュールファイルが存在しない場合に、設定ファイルを自動生成するシェルスクリプトを書いた。&lt;br&gt;
+このシェルスクリプトの先頭行（shebangと呼ぶらしい）に&lt;code class=&quot;language-text&quot;&gt;#!/bin/bash&lt;/code&gt;と書いてしまった。  &lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;bash&quot;&gt;&lt;pre class=&quot;language-bash&quot;&gt;&lt;code class=&quot;language-bash&quot;&gt;&lt;span class=&quot;token shebang important&quot;&gt;#!/bin/ash&lt;/span&gt;
+&lt;span class=&quot;token comment&quot;&gt;#↑ここを /bin/bashにしてしまった。&lt;/span&gt;
+&lt;span class=&quot;token assign-left variable&quot;&gt;FILE&lt;/span&gt;&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;config.json&quot;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;token operator&quot;&gt;!&lt;/span&gt; -e &lt;span class=&quot;token variable&quot;&gt;$FILE&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;then&lt;/span&gt;
+    radcast --setup &lt;span class=&quot;token operator&quot;&gt;&gt;&lt;/span&gt; config.json
+    &lt;span class=&quot;token function&quot;&gt;chmod&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;777&lt;/span&gt; config.json
+&lt;span class=&quot;token keyword&quot;&gt;fi&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;処理部分の構文に問題があると勘違いしてしまい、解決に時間がかかった。&lt;br&gt;
+alpineのデフォルトシェルがashだということは知らなかったので、この問題に当たったことで学べたのは良かった。&lt;/p&gt;
+&lt;h3&gt;Docker Composeファイルを書いてみて学べた箇所&lt;/h3&gt;
+&lt;h4&gt;コンテナの自動起動はDocker Composeが面倒を見てくれる&lt;/h4&gt;
+&lt;p&gt;radcastの利用目的を考えると、システム起動時に自動起動して欲しい。&lt;br&gt;
+docker-composeファイルに&lt;code class=&quot;language-text&quot;&gt;restart&lt;/code&gt;を指定するとコンテナを自動起動してくれる。
+コンテナの停止と起動（再起動）をコマンド一発で行えないかと検索していたら、たまたま見つけることができた。※&lt;a href=&quot;https://junchang1031.hatenablog.com/entry/2016/05/18/000605&quot;&gt;参考&lt;/a&gt;&lt;br&gt;
+ちなみにコンテナの再起動は&lt;code class=&quot;language-text&quot;&gt;$ docker-compose restart&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;3.2&quot;&lt;/span&gt;
+&lt;span class=&quot;token key atrule&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 
+    &lt;span class=&quot;token key atrule&quot;&gt;radcast&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; .
+        &lt;span class=&quot;token key atrule&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 
+          &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; ./&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;/home/radcast
+        &lt;span class=&quot;token key atrule&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; 
+          &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;3355:3355&quot;&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;tty&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token boolean important&quot;&gt;true&lt;/span&gt;
+        &lt;span class=&quot;token key atrule&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; unless&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;stopped&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;所感&lt;/h3&gt;
+&lt;p&gt;Docker,Docker Composeはチュートリアルをこなすばかりで、自身の課題を解決するために各設定ファイルを1から書いたのは今回がはじめてだった。&lt;br&gt;
+現在運用しているRaspberryPi4が故障しても、Dockerが利用できる環境へGitHubからリポジトリを落としてくるだけで環境を構築できるのは非常に良いと思った。&lt;br&gt;
+コマンド一発で環境構築できるのは気持ちが良いし、楽しい。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[tailscaleを利用して外出先でも広告ブロック]]></title><description><![CDATA[外出先でも広告ブロックがしたい 前回の記事では、Pi-holeを利用して広告ブロックDNSサーバーを立てた。 自宅Wi-Fiネットワーク接続時、DNSサーバーをPi-hole…]]></description><link>https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</link><guid isPermaLink="false">https://eginoy.github.io/blog/tailscaleを利用して外出先でも広告ブロック/</guid><pubDate>Wed, 28 Apr 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h3&gt;外出先でも広告ブロックがしたい&lt;/h3&gt;
 &lt;p&gt;前回の&lt;a href=&quot;http://eginoy.com/pihole%E3%81%A7%E5%BA%83%E5%91%8A%E3%83%96%E3%83%AD%E3%83%83%E3%82%AF/&quot;&gt;記事&lt;/a&gt;では、Pi-holeを利用して広告ブロックDNSサーバーを立てた。&lt;br&gt;
 自宅Wi-Fiネットワーク接続時、DNSサーバーをPi-holeに指定することで広告除去ができるようになった。&lt;br&gt;
 しかし、外出先ではモバイネットワークを利用するため、上記の方法で広告ブロックができない。&lt;br&gt;
