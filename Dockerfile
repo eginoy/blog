@@ -8,6 +8,6 @@ COPY . .
 RUN apt-get update && apt-get upgrade -y && apt-get install git && \
 yarn install
 
-CMD yarn clean && yarn develop --host 0.0.0.0
+CMD yarn clean && yarn develop
 
 EXPOSE 8000
