@@ -125,7 +125,7 @@ axios<span class="token punctuation">.</span><span class="token function">post</
 <h5>1. credentials.jsonをbase64文字列で取得</h5>
 <p><code class="language-text">credentials.json</code>をAPIキーなどのシークレットキーを含んだjsonファイルとする。<br>
 <code class="language-text">cat ./credentials.json | base64</code></p>
-<h5><code class="language-text">1.</code> で出力したbase64文字列をGitHub Secretsに登録</h5>
+<h5>2. <code class="language-text">1.</code> で出力したbase64文字列をGitHub Secretsに登録</h5>
 <p><span
       class="gatsby-resp-image-wrapper"
       style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; "
@@ -158,7 +158,7 @@ axios<span class="token punctuation">.</span><span class="token function">post</
       />
   </a>
     </span></p>
-<h5><code class="language-text">2.</code> で登録したSecretsを環境変数として読み込みjsonファイルとして書き出す。</h5>
+<h5>3. <code class="language-text">2.</code> で登録したSecretsを環境変数として読み込みjsonファイルとして書き出す。</h5>
 <p>base64文字列をデコードしてjsonファイルへ書き出す。<br>
 action内では以下の箇所で行っている。</p>
 <div class="gatsby-highlight" data-language="yml"><pre class="language-yml"><code class="language-yml">   <span class="token punctuation">-</span> <span class="token key atrule">name</span><span class="token punctuation">:</span> copy<span class="token punctuation">-</span>google<span class="token punctuation">-</span>spreadsheet<span class="token punctuation">-</span>api<span class="token punctuation">-</span>credentials
