@@ -1,4 +1,174 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sun, 13 Jun 2021 05:22:58 GMT</lastBuildDate><item><title><![CDATA[自動で定期的にファイルを削除する]]></title><description><![CDATA[radcastで録音したファイルが溜まってきたので、cronを利用して一定期間経過したファイルを自動削除する。 ファイルの最終更新日が3週間（21日）より前のファイルを対象とする。   最終更新日が…]]></description><link>https://eginoy.github.io/blog/定期的にファイルを削除する/</link><guid isPermaLink="false">https://eginoy.github.io/blog/定期的にファイルを削除する/</guid><pubDate>Sun, 13 Jun 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;radcastで録音したファイルが溜まってきたので、cronを利用して一定期間経過したファイルを自動削除する。&lt;br&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[eginoy Blog]]></title><description><![CDATA[日々の出来事やプログラミングについて書きます。]]></description><link>https://eginoy.github.io/blog</link><generator>GatsbyJS</generator><lastBuildDate>Sat, 24 Jul 2021 06:51:57 GMT</lastBuildDate><item><title><![CDATA[定型業務自動化で学んだこと]]></title><description><![CDATA[要約 リポジトリ 自動化した作業の流れ Google Sheets APIを利用してデータ取得 取得したデータを元にメッセージを生成 生成したメッセージをIncomming Webhook宛に送信 上記の作業を平日1日1回定期的に実行 利用した技術 Google Sheets…]]></description><link>https://eginoy.github.io/blog/定型業務自動化で学んだこと/</link><guid isPermaLink="false">https://eginoy.github.io/blog/定型業務自動化で学んだこと/</guid><pubDate>Sat, 24 Jul 2021 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;要約&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/eginoy/health-care-reminder&quot;&gt;リポジトリ&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;自動化した作業の流れ&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Sheets APIを利用してデータ取得&lt;/li&gt;
+&lt;li&gt;取得したデータを元にメッセージを生成&lt;/li&gt;
+&lt;li&gt;生成したメッセージをIncomming Webhook宛に送信&lt;/li&gt;
+&lt;li&gt;上記の作業を平日1日1回定期的に実行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;利用した技術&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Sheets API&lt;/li&gt;
+&lt;li&gt;Node.js&lt;/li&gt;
+&lt;li&gt;Docker&lt;/li&gt;
+&lt;li&gt;Docker-Compose&lt;/li&gt;
+&lt;li&gt;GitHub Actions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;新たに学べたこと&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google Sheets APIを利用したデータの取得方法&lt;/li&gt;
+&lt;li&gt;GitHub Actionsの利用方法&lt;/li&gt;
+&lt;li&gt;GitHub ActionsでのDocker-Compose実行方法&lt;/li&gt;
+&lt;li&gt;GitHub Actionsでのシークレットキーの扱い方&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;きっかけ&lt;/h2&gt;
+&lt;p&gt;所属する会社ではコロナ禍が始まってから1日1回検温を行い&lt;a href=&quot;https://www.health-monitoring.net/&quot;&gt;健康監視ツール&lt;/a&gt;を利用して、Google Sheetsに記録をしている。&lt;br&gt;
+健康監視を行う目的からして毎日漏れなく行うことが大切である。&lt;br&gt;
+そのため、毎日終業時刻が近づくと未記録の人を確認してチャット上で記入催促を行う作業が発生した。  &lt;/p&gt;
+&lt;p&gt;最初に未記入者チェックを行った先輩が、その後も毎日チェックを行うようになった。&lt;br&gt;
+明示的に誰が毎日の未記入者チェックを行うのか決めなかったため、この先輩が休暇中の時も未記入者チェックを行うようになってしまった。&lt;br&gt;
+たとえ5分とかからない作業であっても、休暇中に業務を行わなければならない状況を改善したかったため、自動化を行うことにした。&lt;br&gt;
+(休暇中、代わりにチェックを行う人を明示的に決めるなどすれば良いが、そもそも人が手作業で行う必要が無いので。)&lt;/p&gt;
+&lt;h2&gt;自動化作業でのポイント&lt;/h2&gt;
+&lt;h3&gt;Node.jsでIncomming Webhookにメッセージ送信&lt;/h3&gt;
+&lt;p&gt;受け取り側はMicrosoft Teams&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;js&quot;&gt;&lt;pre class=&quot;language-js&quot;&gt;&lt;code class=&quot;language-js&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; axios &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&apos;axios&apos;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token keyword&quot;&gt;const&lt;/span&gt; postData &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;text&lt;span class=&quot;token operator&quot;&gt;:&lt;/span&gt; remindMessage&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+axios&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;webhookURL&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt;postData&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;https://qiita.com/penta515/items/074b5c7694b9bcec1043&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+&lt;h3&gt;GitHub Actions のAction作成&lt;/h3&gt;
+&lt;p&gt;作業フォルダに&lt;code class=&quot;language-text&quot;&gt;.github/workflows/action.yml&lt;/code&gt;を配置&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;&lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; run&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;reminder
+
+&lt;span class=&quot;token key atrule&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;workflow_dispatch&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;#これ書いとくと手動実行できるようになる。&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;schedule&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+   &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;cron&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&apos;00 7 * * 1-5&apos;&lt;/span&gt; &lt;span class=&quot;token comment&quot;&gt;# 平日16時(github actions実行時間がUTCなので9時間マイナスで日本時間になる。)&lt;/span&gt;
+
+&lt;span class=&quot;token key atrule&quot;&gt;jobs&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;token key atrule&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token key atrule&quot;&gt;runs-on&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; ubuntu&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;latest
+    &lt;span class=&quot;token key atrule&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;uses&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; actions/checkout@v2
+    
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; run&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose
+      &lt;span class=&quot;token key atrule&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;HEALTHCAREINPUT_BASEURL&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.HEALTHCAREINPUT_BASEURL&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;SPREADSHEET_ID&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.SPREADSHEET_ID&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;FORMDATASHEET_ID&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.FORMDATASHEET_ID&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;USERMASTERSHEET_ID&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.USERMASTERSHEET_ID&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;WEBHOOK_URL&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.WEBHOOK_URL&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;    
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose up &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;d &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;build
+    
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; copy&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;google&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spreadsheet&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;api&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;credentials
+      &lt;span class=&quot;token key atrule&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;SPREADSHEET_SECRETS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.GOOGLE_SPREADSHEET_API_SECRETS&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; echo $SPREADSHEET_SECRETS &lt;span class=&quot;token punctuation&quot;&gt;|&lt;/span&gt; base64 &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;decode &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;ignore&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;garbage &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt; ./credentials.json
+    
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; run&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;npm&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;install&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;on&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;container
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose exec &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;T reminder npm install
+      
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; run&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;reminder
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose exec &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;T reminder node src/index.js
+
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; delete&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;credentials
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; rm &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;rf ./credentials.json
+
+    &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; stop&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;containers
+      &lt;span class=&quot;token key atrule&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; always()
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; docker&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;compose down&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4&gt;手動実行を可能にする&lt;/h4&gt;
+&lt;p&gt;トリガーに&lt;code class=&quot;language-text&quot;&gt;workflow_dispatch:&lt;/code&gt;を指定することで、GitHub Actionsから手動実行が可能になる。&lt;br&gt;
+&lt;a href=&quot;https://docs.github.com/ja/actions/managing-workflow-runs/manually-running-a-workflow&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;定期実行&lt;/h4&gt;
+&lt;p&gt;トリガーに&lt;code class=&quot;language-text&quot;&gt;schedule:&lt;/code&gt;を指定し&lt;code class=&quot;language-text&quot;&gt;cron:&lt;/code&gt;で記述できる。&lt;br&gt;
+実行時間の基準がUTCなので日本時間で指定する際には&lt;code class=&quot;language-text&quot;&gt;-9&lt;/code&gt;時間する。&lt;br&gt;
+例では月曜から金曜日の16時に実行するように設定している。&lt;br&gt;
+ただし、指定した時間ピッタリには実行されないので注意。(一度試したら、指定時間+9分後に実行開始した。)&lt;br&gt;
+&lt;a href=&quot;https://matsuoshi.hatenablog.com/entry/2020/05/10/000000&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;the input device is not a TTYエラー&lt;/h4&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 10.126582278481013%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAACCAIAAADXZGvcAAAACXBIWXMAABGvAAARrwH3/UuEAAAAPUlEQVQI143CwRGAMAgEwHQgMFxMODD6sP8WtQPd2cZxcN2ISzwUqaD2FPCz7dVc/JyVXO+Y1THcoJv9+QCCQwndYMptHAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;docker compose exec error&quot;
+        title=&quot;docker compose exec error&quot;
+        src=&quot;/static/7c95e8af24aecf1740abca93bdfbd408/f058b/docker-compose_exec_error.png&quot;
+        srcset=&quot;/static/7c95e8af24aecf1740abca93bdfbd408/c26ae/docker-compose_exec_error.png 158w,
+/static/7c95e8af24aecf1740abca93bdfbd408/6bdcf/docker-compose_exec_error.png 315w,
+/static/7c95e8af24aecf1740abca93bdfbd408/f058b/docker-compose_exec_error.png 630w,
+/static/7c95e8af24aecf1740abca93bdfbd408/40601/docker-compose_exec_error.png 945w,
+/static/7c95e8af24aecf1740abca93bdfbd408/78612/docker-compose_exec_error.png 1260w,
+/static/7c95e8af24aecf1740abca93bdfbd408/01ccc/docker-compose_exec_error.png 1399w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+    &lt;/span&gt;
+&lt;code class=&quot;language-text&quot;&gt;docker-compose exec -T reminder node src/index.js&lt;/code&gt;&lt;br&gt;
+のように&lt;code class=&quot;language-text&quot;&gt;exec&lt;/code&gt;コマンドに&lt;code class=&quot;language-text&quot;&gt;-T&lt;/code&gt;オプションをつける。&lt;br&gt;
+&lt;a href=&quot;https://www.nullpo.io/2020/05/11/git-github-actions-docker-compose/&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;シークレットキーのjsonをAction内で扱う&lt;/h4&gt;
+&lt;p&gt;APIキーなどが含まれたjsonはどうやって管理しているのか気になって検索していたらたどり着いた方法。&lt;br&gt;
+今回調べた中で一番感心した。&lt;br&gt;
+&lt;a href=&quot;https://www.notion.so/bfe5bcffba6f489f9c4a2fa29451917c#971c95a2a1864aa0bde022b2d16f9f5a&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+&lt;h5&gt;1. credentials.jsonをbase64文字列で取得&lt;/h5&gt;
+&lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;credentials.json&lt;/code&gt;をAPIキーなどのシークレットキーを含んだjsonファイルとする。&lt;br&gt;
+&lt;code class=&quot;language-text&quot;&gt;cat ./credentials.json | base64&lt;/code&gt;&lt;/p&gt;
+&lt;h5&gt;&lt;code class=&quot;language-text&quot;&gt;1.&lt;/code&gt; で出力したbase64文字列をGitHub Secretsに登録&lt;/h5&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/004f0064cbe87830ccca6f6a84e623ba/0a344/githubactions_secrets_regist.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 43.0379746835443%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAYAAAAywQxIAAAACXBIWXMAABGwAAARsAHIJ/VUAAABaUlEQVQoz1VS23aDMAzr67oCpZALEK7toFt36Xa2//80zTKwdg86SRxZke1s9nmJ1FQ42FrXeR+Q+QYHV+s+yUrYosLPZwPrPbaJRZRa7PYW8cFjn1fKiVKHzWNiQFEmksAgSUV9VPABnqPU4yHmXaHnJCuUa8sew/iGsn3CjoIUoVjoJhXmmWQS6n6S+CjrGc3wrOf2eIZvJpjqiFyq0Eokn+LMVUG64CWDq8OKQsMZpug0ich9i8xx30o7mgX1HHPNreRMgkVz+it5BR2TSIehF4fHFzSni65EEMdr7+e2uJtDW/U3Mbm8F084OD9g73pdFbJna+LDkrPwRVCGYoKU04FuCV4YLXHuDx+k2/8odLr3WEq2qNsWp3FCLv0yZScCAaY+wXZPiHKZfioJpp7LUwTtJ0E+f4Mr2nnK29hgHHtcXkdNIMmXAe8fJa7fAdcvwVVa4h228fz31p/B3ttqQC8/IFBQ4r8IfOUj0tc2lAAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;githubactions secrets regist&quot;
+        title=&quot;githubactions secrets regist&quot;
+        src=&quot;/static/004f0064cbe87830ccca6f6a84e623ba/f058b/githubactions_secrets_regist.png&quot;
+        srcset=&quot;/static/004f0064cbe87830ccca6f6a84e623ba/c26ae/githubactions_secrets_regist.png 158w,
+/static/004f0064cbe87830ccca6f6a84e623ba/6bdcf/githubactions_secrets_regist.png 315w,
+/static/004f0064cbe87830ccca6f6a84e623ba/f058b/githubactions_secrets_regist.png 630w,
+/static/004f0064cbe87830ccca6f6a84e623ba/40601/githubactions_secrets_regist.png 945w,
+/static/004f0064cbe87830ccca6f6a84e623ba/78612/githubactions_secrets_regist.png 1260w,
+/static/004f0064cbe87830ccca6f6a84e623ba/0a344/githubactions_secrets_regist.png 1741w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h5&gt;&lt;code class=&quot;language-text&quot;&gt;2.&lt;/code&gt; で登録したSecretsを環境変数として読み込みjsonファイルとして書き出す。&lt;/h5&gt;
+&lt;p&gt;base64文字列をデコードしてjsonファイルへ書き出す。&lt;br&gt;
+action内では以下の箇所で行っている。&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;yml&quot;&gt;&lt;pre class=&quot;language-yml&quot;&gt;&lt;code class=&quot;language-yml&quot;&gt;   &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;token key atrule&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; copy&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;google&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;spreadsheet&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;api&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;credentials
+      &lt;span class=&quot;token key atrule&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+       &lt;span class=&quot;token key atrule&quot;&gt;SPREADSHEET_SECRETS&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; $&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;secrets.GOOGLE_SPREADSHEET_API_SECRETS&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;token key atrule&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; echo $SPREADSHEET_SECRETS &lt;span class=&quot;token punctuation&quot;&gt;|&lt;/span&gt; base64 &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;decode &lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;ignore&lt;span class=&quot;token punctuation&quot;&gt;-&lt;/span&gt;garbage &lt;span class=&quot;token punctuation&quot;&gt;&gt;&lt;/span&gt; ./credentials.json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3&gt;所感など&lt;/h3&gt;
+&lt;p&gt;GitHub Actionsは聞いたことがある程度で具体的に何ができるのか、何をするものなのかを知らなかった。&lt;br&gt;
+今回のように定期的に軽い処理を実行したい場合など十分無料枠で足りるので、幅広い用途に利用でき便利だと思った。  &lt;/p&gt;
+&lt;p class=&apos;diamond&apos;&gt;&amp;#9830;&lt;/p&gt;
+&lt;p&gt;今回の自動化の処理部分を書くのに当たり、以前O’ReillyのTypeScript本を写経してから、一度もTypeScriptを利用していないことを思い出した。&lt;br&gt;
+せっかくなので今回はJavaScriptではなく、TypeScriptで書こうとしたが環境構築につまずいてしまい、結局JavaScriptで書いてしまった。&lt;br&gt;
+こういった機会が無いと業務で扱わない技術を利用することがないので、リファクタリングも兼ねてTypeScriptに書き直そうと思う。&lt;/p&gt;</content:encoded></item><item><title><![CDATA[自動で定期的にファイルを削除する]]></title><description><![CDATA[radcastで録音したファイルが溜まってきたので、cronを利用して一定期間経過したファイルを自動削除する。 ファイルの最終更新日が3週間（21日）より前のファイルを対象とする。   最終更新日が…]]></description><link>https://eginoy.github.io/blog/定期的にファイルを削除する/</link><guid isPermaLink="false">https://eginoy.github.io/blog/定期的にファイルを削除する/</guid><pubDate>Sun, 13 Jun 2021 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;radcastで録音したファイルが溜まってきたので、cronを利用して一定期間経過したファイルを自動削除する。&lt;br&gt;
 ファイルの最終更新日が3週間（21日）より前のファイルを対象とする。  &lt;/p&gt;
 &lt;h3&gt;最終更新日が3週間より前のファイルを検索する&lt;/h3&gt;
 &lt;p&gt;今回は対象を削除するので先に検索だけを行い、結果が想定したものになっているか確認しておく。&lt;br&gt;
