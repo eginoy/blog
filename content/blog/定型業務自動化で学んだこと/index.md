@@ -117,9 +117,9 @@ APIキーなどが含まれたjsonはどうやって管理しているのか気�
 ##### 1. credentials.jsonをbase64文字列で取得
 `credentials.json`をAPIキーなどのシークレットキーを含んだjsonファイルとする。  
 `cat ./credentials.json | base64`
-##### `1.` で出力したbase64文字列をGitHub Secretsに登録
+##### 2. `1.` で出力したbase64文字列をGitHub Secretsに登録
 ![](githubactions_secrets_regist.png)
-##### `2.` で登録したSecretsを環境変数として読み込みjsonファイルとして書き出す。
+##### 3. `2.` で登録したSecretsを環境変数として読み込みjsonファイルとして書き出す。
 base64文字列をデコードしてjsonファイルへ書き出す。  
 action内では以下の箇所で行っている。
 ``` yml
