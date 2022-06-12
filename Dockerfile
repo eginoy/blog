@@ -5,7 +5,7 @@ WORKDIR /home/workspace
 
 COPY . .
 
-RUN apt-get update && apt-get upgrade -y && apt-get install git && \
+RUN apt update && apt upgrade -y && apt install git && \
 yarn
 
 CMD yarn clean && yarn develop
