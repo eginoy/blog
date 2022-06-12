@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:lts-bullseye
 
 RUN mkdir /home/workspace
 WORKDIR /home/workspace
@@ -6,7 +6,7 @@ WORKDIR /home/workspace
 COPY . .
 
 RUN apt-get update && apt-get upgrade -y && apt-get install git && \
-yarn install
+yarn
 
 CMD yarn clean && yarn develop
 

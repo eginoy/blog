@@ -1,9 +1,13 @@
 version: "3.8"
-services: 
+services:
     gatsby:
         build: .
-        volumes: 
+        volumes:
             - ./:/home/workspace
-        ports: 
+            - node_modules:/home/workspace/node_modules #node_modulesをホスト、コンテナ間で同期しない
+        ports:
             - "8000:8000"
         tty: true
+
+volumes:
+    node_modules:
