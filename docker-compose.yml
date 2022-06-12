@@ -4,6 +4,7 @@ services:
         build: .
         volumes:
             - ./:/home/workspace
+            #https://zenn.dev/tamanugi/articles/6f372d45b85c18
             - node_modules:/home/workspace/node_modules #node_modulesをホスト、コンテナ間で同期しない
         ports:
             - "8000:8000"
