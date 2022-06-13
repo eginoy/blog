@@ -8,6 +8,8 @@ services:
             - node_modules:/home/workspace/node_modules #node_modulesをホスト、コンテナ間で同期しない
         ports:
             - "8000:8000"
+        environment:
+            - NODE_ENV=development #環境変数として渡しておかないとホットリロードが効かない
         tty: true
 
 volumes:
